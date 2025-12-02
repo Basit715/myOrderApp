@@ -10,38 +10,40 @@ st.title("⚡ Fast Medicine Order Entry — Google Sheet Backend")
 scope = ["https://www.googleapis.com/auth/spreadsheets",
          "https://www.googleapis.com/auth/drive"]
 
-try:
-    creds = Credentials.from_service_account_info(
-        st.secrets["gcp_service_account"], scopes=scope
+def read_excel_from_drive(file_id):
+    service = gdrive_service()
+
+    # Export Google Sheet to Excel
+    data = service.files().export(
+        fileId=file_id,
+        mimeType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    ).execute()
+
+    buffer = io.BytesIO()
+    buffer.write(data)
+    buffer.seek(0)
+
+    df = pd.read_excel(buffer, engine="openpyxl")
+    return df
+def write_excel_to_drive(df, file_id):
+    service = gdrive_service()
+
+    excel_buffer = io.BytesIO()
+    df.to_excel(excel_buffer, index=False, engine="openpyxl")
+    excel_buffer.seek(0)
+
+    media = MediaIoBaseUpload(
+        excel_buffer,
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        resumable=False
     )
-    gc = gspread.authorize(creds)
-except Exception as e:
-    st.error(f"Error authenticating Google Sheets: {e}")
-    st.stop()
 
-# --- Google Sheet ID ---
-SHEET_ID = "15k2WiIZ2sNXgxFx5HQnbvlzaUaxkSfrvkyeDwjg9log"  # Replace with your actual sheet ID
+    service.files().update(
+        fileId=file_id,
+        media_body=media
+    ).execute()
+MYORDERS_FILE = os.path.join(DATA_DIR, "myorders.xlsx")
 
-# --- Open Google Sheet safely ---
-try:
-    sheet = gc.open_by_key(SHEET_ID).sheet1  # First tab
-except Exception as e:
-    st.error(f"Error accessing Google Sheet: {e}")
-    sheet = None
-
-# --- Read existing orders safely ---
-if sheet is not None:
-    try:
-        data = sheet.get_all_records()
-        if data:
-            order_list_df = pd.DataFrame(data)
-        else:
-            order_list_df = pd.DataFrame(columns=['Party Name', 'Medicine Name', 'Quantity'])
-    except Exception as e:
-        st.error(f"Error reading data: {e}")
-        order_list_df = pd.DataFrame(columns=['Party Name', 'Medicine Name', 'Quantity'])
-else:
-    order_list_df = pd.DataFrame(columns=['Party Name', 'Medicine Name', 'Quantity'])
 
 # --- Session State ---
 if 'current_party' not in st.session_state:
