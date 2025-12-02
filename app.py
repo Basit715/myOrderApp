@@ -24,7 +24,7 @@ try:
 except Exception as e:
     st.error(f"Error accessing Google Sheet: {e}")
 # --- Read existing orders ---
-data = worksheet.get_all_records()
+data = sheet.get_all_records()
 if data:
     order_list_df = pd.DataFrame(data)
 else:
