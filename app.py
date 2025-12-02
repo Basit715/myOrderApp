@@ -42,7 +42,24 @@ def write_excel_to_drive(df, file_id):
         fileId=file_id,
         media_body=media
     ).execute()
+DATA_DIR = "."
 MYORDERS_FILE = os.path.join(DATA_DIR, "myorders.xlsx")
+MYORDERS_ID "15k2WiIZ2sNXgxFx5HQnbvlzaUaxkSfrvkyeDwjg9log"
+
+def load_orders():
+         try:
+        df = read_excel_from_drive(st.secrets['files']['MYORDERS_ID'])
+        return df.fillna("")
+    except Exception as e:
+        st.error(f"Error loading orders {e}")
+        return pd.DataFrame(columns=["Party Name","Medicine Name","Quantity"])
+def save_orders(df):
+         try:
+        write_excel_to_drive(df,st.secrets['files']['MYORDERS_ID'])
+    except Exception as e:
+        st.error(f"Error saving medicines {e}")
+
+         
 
 
 # --- Session State ---
