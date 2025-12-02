@@ -18,9 +18,11 @@ gc = gspread.authorize(creds)
 
 # --- Google Sheet ID ---
 SHEET_ID = "15k2WiIZ2sNXgxFx5HQnbvlzaUaxkSfrvkyeDwjg9log"  # Replace with your Google Sheet ID
-sheet = gc.open_by_key(SHEET_ID)
-worksheet = sheet.sheet1
-
+try:
+    sheet = gc.open_by_key(SHEET_ID)
+    st.success("Google Sheet opened successfully!")
+except Exception as e:
+    st.error(f"Error accessing Google Sheet: {e}")
 # --- Read existing orders ---
 data = worksheet.get_all_records()
 if data:
