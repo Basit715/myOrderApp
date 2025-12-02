@@ -111,7 +111,8 @@ with col3:
 
 # --- Show All Orders ---
 st.subheader("All Orders")
-st.table(order_list_df)st.subheader(f"Current Order for Party: {party_name}")
+st.table(order_list_df)
+st.subheader(f"Current Order for Party: {party_name}")
 st.table(st.session_state.current_order)
 
 # --- Buttons: Save / Export / Clear ---
