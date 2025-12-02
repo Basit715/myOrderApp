@@ -78,7 +78,7 @@ st.table(st.session_state.current_order)
 # --- Buttons: Save / Export / Clear ---
 col1, col2, col3 = st.columns(3)
 with col1:
-    if st.button("Save Order"):
+    if st.button("Save Order",key = "save_order"):
         if st.session_state.current_order.empty:
             st.warning("Add medicines first!")
         elif sheet is None:
@@ -96,7 +96,7 @@ with col1:
                 st.error(f"Failed to update Google Sheet: {e}")
 
 with col2:
-    if st.button("Export All Orders to Excel"):
+    if st.button("Export All Orders to Excel",key = "export_orders"):
         if order_list_df.empty:
             st.warning("No orders to export!")
         else:
@@ -104,7 +104,7 @@ with col2:
             st.success("All orders exported to medicine_orders.xlsx!")
 
 with col3:
-    if st.button("Clear Current Order"):
+    if st.button("Clear Current Order",key = "clear_order"):
         st.session_state.current_order = pd.DataFrame(columns=['Medicine Name', 'Quantity'])
         st.session_state.current_party = ""
         st.success("Current order cleared!")
