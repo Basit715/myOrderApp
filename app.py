@@ -8,7 +8,7 @@ st.set_page_config(
     page_icon="🟢",
     layout="wide"
 )
-st.title("⚡ Fast Medicine Order Entry — GitHub Excel Backend")
+st.title("⚡ My Order Entry Book - Tell Your Orders")
 
 # --- File path ---
 MYORDERS_FILE = "myorders.xlsx"
@@ -119,4 +119,4 @@ else:
             orders_df = orders_df[orders_df["Party Name"] != party]
             save_orders(orders_df)
             st.success(f"Deleted full order for {party}")
-            st.experimental_rerun()
+            st.rerun()
