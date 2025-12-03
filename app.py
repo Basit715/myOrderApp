@@ -1,6 +1,12 @@
 import streamlit as st
 import pandas as pd
 import os
+import streamlit as st
+
+st.set_page_config(
+    page_title="App One",           # The label shown under the icon
+    page_icon="🟢"                  # Emoji OR local image OR URL
+)
 
 # --- Page config ---
 st.set_page_config(page_title="Fast Medicine Order App", layout="wide")
