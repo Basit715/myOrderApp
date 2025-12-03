@@ -1,15 +1,13 @@
 import streamlit as st
 import pandas as pd
 import os
-import streamlit as st
-
-st.set_page_config(
-    page_title="App One",           # The label shown under the icon
-    page_icon="🟢"                  # Emoji OR local image OR URL
-)
 
 # --- Page config ---
-st.set_page_config(page_title="Fast Medicine Order App", layout="wide")
+st.set_page_config(
+    page_title="Fast Medicine Order App",
+    page_icon="🟢",
+    layout="wide"
+)
 st.title("⚡ Fast Medicine Order Entry — GitHub Excel Backend")
 
 # --- File path ---
@@ -102,6 +100,13 @@ with col3:
         st.session_state.current_party = ""
         st.success("Current order cleared!")
 
-# --- Show All Orders ---
-st.subheader("All Orders")
-st.table(orders_df)
+# --- Show All Orders Grouped by Party ---
+st.subheader("All Orders (Grouped by Party)")
+
+if orders_df.empty:
+    st.info("No orders yet!")
+else:
+    grouped = orders_df.groupby("Party Name")
+    for party, group in grouped:
+        st.markdown(f"### {party}")
+        st.table(group[['Medicine Name','Quantity']])
