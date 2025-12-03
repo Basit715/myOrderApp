@@ -98,7 +98,8 @@ with col3:
 
 # --- Show All Orders ---
 st.subheader("All Orders")
-st.table(orders_df)    excel_buffer.seek(0)
+st.table(orders_df)
+excel_buffer.seek(0)
     media = MediaIoBaseUpload(
         excel_buffer,
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
