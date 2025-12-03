@@ -100,33 +100,23 @@ with col3:
         st.session_state.current_party = ""
         st.success("Current order cleared!")
 
-# --- Show All Orders Grouped by Party WITH DELETE BUTTON ---
+# --- Show All Orders Grouped by Party With Delete Whole Party ---
 st.subheader("All Orders (Grouped by Party)")
 
 if orders_df.empty:
     st.info("No orders yet!")
 else:
-
-    # Ensure proper index for deletion
-    orders_df = orders_df.reset_index(drop=True)
-
     grouped = orders_df.groupby("Party Name")
 
     for party, group in grouped:
         st.markdown(f"### 🔵 {party}")
 
-        # Display each medicine with a delete button
-        for idx, row in group.iterrows():
+        # Show medicines grouped
+        st.table(group[['Medicine Name', 'Quantity']])
 
-            colA, colB, colC, colD = st.columns([4,2,2,2])
-            with colA:
-                st.write(f"**{row['Medicine Name']}**")
-            with colB:
-                st.write(row['Quantity'])
-            with colD:
-                if st.button("❌ Delete", key=f"del_{idx}"):
-                    orders_df = orders_df.drop(idx)
-                    orders_df = orders_df.reset_index(drop=True)
-                    save_orders(orders_df)
-                    st.success("Deleted successfully!")
-                    st.rerun()
+        # Delete entire order for this party
+        if st.button(f"❌ Delete Entire Order for {party}", key=f"delete_{party}"):
+            orders_df = orders_df[orders_df["Party Name"] != party]
+            save_orders(orders_df)
+            st.success(f"Deleted full order for {party}")
+            st.experimental_rerun()
