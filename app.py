@@ -58,7 +58,15 @@ def save_orders(df):
         write_excel_to_drive(df,st.secrets['files']['MYORDERS_ID'])
     except Exception as e:
         st.error(f"Error saving medicines {e}")
-
+orders_df = load_orders()
+if orders_df.empty:
+    # Example: add starting balances for existing parties
+    starting_entries = pd.DataFrame([
+          {"Party Name":"Basit Medical store","Medicine Name":"Cyra D","Quantity":15}
+    ])
+    orders_df = pd.concat([orders_df, starting_entries], ignore_index=True)
+    save_orders(orders_df)
+         
          
 
 
