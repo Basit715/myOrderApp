@@ -298,7 +298,7 @@ with st.form("add_medicine_form", clear_on_submit=True):
             st.session_state.current_order = pd.concat([st.session_state.current_order, new_row], ignore_index=True)
 
 # --- Show Current Order ---
-st.subheader(f"Current Order for Party: <span class='party-badge'><span class='party-accent'></span>{party_name}</span>", unsafe_allow_html=True)
+st.markdown(f"Current Order for Party: <span class='party-badge'><span class='party-accent'></span>{party_name}</span>", unsafe_allow_html=True)
 st.table(st.session_state.current_order)
 
 # --- Buttons: Save / Export / Clear ---
